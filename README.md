@@ -38,7 +38,7 @@ This can also be done outside of RouterOS, but this way it is pretty convenient.
 /certificate sign EAP_Client ca=RouterCA name=EAP_Client
 /certificate set EAP_Client trusted=yes
 # for import as wireless network certificate or user certificate on client
-/certificate export-certificate EAP_Client type=pkcs12 export-passphrase=certificate123
+/certificate export-certificate EAP_Client type=pkcs12 export-passphrase=<your_long_passphrase_goes_here>
 ```
 
 The exported files should be:
@@ -80,4 +80,8 @@ cert_export_EAP_Client.p12
 
 Before deploying for real, make sure you check revokation works as expected, since you cannot delete certificates anymore (unless you remove all of them together with the CA).
 
+Some links that might come in handy:
 
+https://wiki.mikrotik.com/wiki/Manual:Wireless_EAP-TLS_using_RouterOS_with_FreeRADIUS
+https://www.nkent.us/wiki/index.php/Wireless_networking_with_CAPsMAN_and_the_MikroTik_cAP_ac
+https://serverfault.com/questions/986375/mikrotik-eap-tls-wifi-config-using-certificates
