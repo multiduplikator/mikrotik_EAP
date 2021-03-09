@@ -42,7 +42,23 @@ This can also be done outside of RouterOS, but this way it is pretty convenient.
 ```
 
 The exported files should be:
-cert_export_RouterCA.crt -> only needed for deploying the client
-cert_export_EAP_Client.p12 -> only needed for deploying the client
+
+```
+cert_export_RouterCA.crt -> for deploying the client
+cert_export_EAP_Client.p12 -> for deploying the client
+```
+
+### Setup wireless AP
+
+We assume that we already have a working CAPsMAN setup and provisioned the AP with a security profile.
+
+Create a new security profile.
+
+```
+name="security_eap-tls" authentication-types=wpa2-eap encryption=aes-ccm group-encryption=aes-ccm eap-methods=eap-tls tls-mode=verify-certificate-with-crl tls-certificate=EAP_AP
+```
+
+Now change the respective configuration for the AP to use the new profile and provision.
+
 
 
