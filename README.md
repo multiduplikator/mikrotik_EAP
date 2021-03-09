@@ -6,7 +6,7 @@ We are going to do this in the following steps
 - Setup wireless AP
 - Setup wireless client
 
-We assume RouterOS is on 10.0.0.1 and APs are managed via CAPsMAN.
+We assume RouterOS is on 10.0.0.1 and APs are managed via CAPsMAN. And you are somewhat familiar with Mikrotik stuff.
 
 ### Enable CRL
 
@@ -60,5 +60,24 @@ name="security_eap-tls" authentication-types=wpa2-eap encryption=aes-ccm group-e
 
 Now change the respective configuration for the AP to use the new profile and provision.
 
+### Setup wireless client
+
+For Windows, Android and iOS clients, you simply import the following two files
+
+```
+cert_export_RouterCA.crt
+-> WIN: double click to install and specify to go into trusted root certification authorities (local machine or current user)
+-> AND: install network certificate in advanced wireless settings
+-> IOS: https://apple.stackexchange.com/questions/326208/how-do-i-configure-an-ipad-to-use-eap-tls
+
+cert_export_EAP_Client.p12
+-> WIN: double click to install (current user)
+-> AND: as above
+-> IOS: as above
+```
+
+### Final remarks
+
+Before deploying for real, make sure you check revokation works as expected, since you cannot delete certificates anymore (unless you remove all of them together with the CA).
 
 
