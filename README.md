@@ -6,3 +6,6 @@ We are going to do this in the following steps
 - Setup wireless AP
 - Setup wireless client
 
+### Enable CRL
+
+By default on recent RouterOS versions, CRL is disabled by default.
