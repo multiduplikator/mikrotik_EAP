@@ -76,6 +76,9 @@ cert_export_EAP_Client.p12
 -> IOS: as above
 ```
 
+From here, you can configure the respective device to use your imported CA and certificate. WIN and IOS usually autoselect when trying ot connect. AND needs manual configuration.
+
+
 ### Final remarks
 
 Before deploying for real, make sure you check revokation works as expected, since you cannot delete certificates anymore (unless you remove all of them together with the CA).
