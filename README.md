@@ -10,7 +10,7 @@ We assume RouterOS is on 10.0.0.1 and APs are managed via CAPsMAN. And you are s
 
 ### Enable CRL
 
-By default on recent RouterOS versions, CRL is disabled. In order to be able to revoke certificates later and effectively bar clients from connecting, CRL on RouterOS has to be eenabled. In our use case, we dont need the CRL download feature.
+By default on recent RouterOS versions, CRL is disabled. In order to be able to revoke certificates later and effectively bar clients from connecting, CRL on RouterOS has to be enabled. In our use case, we dont need the CRL download feature.
 
 As a side note, in case you want to use freeradius, you have to enable CRL download and also enable www service, so the freeradius server can download the CRL from RouterOS.
 
