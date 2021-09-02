@@ -76,7 +76,7 @@ cert_export_EAP_Client.p12
 -> IOS: as above with .crt
 ```
 
-From here, you can configure the respective device to use your imported CA and certificate. WIN and IOS usually autoselect when trying ot connect. AND needs manual configuration.
+From here, you can configure the respective device to use your imported CA and certificate. WIN and IOS usually autoselect when trying to connect. AND needs manual configuration.
 
 #### Sidenote on WPA3 and Android 11
 We are on the advent of WPA3 and Android 11 now starts to enforce section 5.1:
