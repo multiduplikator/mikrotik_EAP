@@ -72,8 +72,8 @@ cert_export_RouterCA.crt
 
 cert_export_EAP_Client.p12
 -> WIN: double click to install (current user)
--> AND: as above
--> IOS: as above
+-> AND: as above with .crt
+-> IOS: as above with .crt
 ```
 
 From here, you can configure the respective device to use your imported CA and certificate. WIN and IOS usually autoselect when trying ot connect. AND needs manual configuration.
