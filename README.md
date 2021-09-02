@@ -80,7 +80,7 @@ From here, you can configure the respective device to use your imported CA and c
 
 #### Sidenote on WPA3 and Android 11
 We are on the advent of WPA3 and Android 11 now starts to enforce section 5.1:
-"The STA is configured with EAP credentials that explicitly specify a CA root certificate that matches the root certificate in the received Server Certificate message and, if the EAP credentials also include a domain name (FQDN or suffix-only), it matches the domain name (SubjectAltName dNSName if present, otherwise SubjectName CN) of the certificate [2] in the received Server Certificate message."
+"The STA is configured with EAP credentials that explicitly specify a CA root certificate that matches the root certificate in the received Server Certificate message and, if the EAP credentials also include a domain name (FQDN or suffix-only), it matches the domain name (SubjectAltName DNSName if present, otherwise SubjectName CN) of the certificate [2] in the received Server Certificate message."
 
 In somewhat simpler terms, this reads:
 "The new Domain field in the wifi config dialog must be the CN or subjectAlternateName of the server certificate." 
