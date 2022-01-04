@@ -1,18 +1,18 @@
 # mikrotik EAP-TLS and EAP-PEAP (ROS6 classic or ROS7 with User Manager V5) 
 
 We are going to do this in the following steps
-- Step 1: [ROS6 and ROS7](#step-1-ros6-and-ros7)
-  - Enable CRL
-- Step 2a: ROS6
-  - Create CA and certificates
-  - Setup wireless AP
-- Step 2b: ROS7
-  - Create CA and certificates
-  - Setup User Manager
-  - Setup wireless AP
-- Step 3: ROS6 and ROS7
-  - Setup wireless client with EAP-TLS
-  - Setup wireless client with EAP-PEAP
+- [Step 1: ROS6 and ROS7](#step-1-ros6-and-ros7)
+  - [Enable CRL](#enable-crl)
+- [Step 2a: ROS6](#step-2a-ros6)
+  - [Create CA and certificates](#ros6---create-ca-and-certificates)
+  - [Setup wireless AP](#ros6---setup-wireless-ap)
+- [Step 2b: ROS7](#step-2b-ros7)
+  - [Create CA and certificates](#ros7---create-ca-and-certificates)
+  - [Setup User Manager](#ros7---setup-usermanager)
+  - [Setup wireless AP](#ros7---setup-wireless-ap)
+- [Step 3: ROS6 and ROS7](#step-3-ros6-and-ros7)
+  - [Setup wireless client with EAP-TLS](#setup-wireless-client-with-eap-tls)
+  - [Setup wireless client with EAP-PEAP](#setup-wireless-client-with-eap-peap)
 
 
 We assume RouterOS is on 10.0.0.1 and APs are managed via CAPsMAN. And you are somewhat familiar with Mikrotik stuff.
@@ -178,6 +178,8 @@ From here, you can configure the respective device to use your imported CA and c
 In case you have ROS6, you have to implement EAP-PEAP via passthrough to a sidecar radius server, e.g. freeradius. This works with a dedicated wireless network that does the passthrough.
 
 In case you have ROS7 and User Manager, you can do EAP-PEAP on the same wireless network, using the user/password combination as created in the default group above, i.e. username as "SomeUser" and password as "<users_password_goes_here>" - leaving the anonymous_identity blank.
+
+This mode is particularly usefull for Chromebooks that are remote administered, and where you cannot install certificates permanently.
 
 ### Sidenote on WPA3 and Android 11
 We are on the advent of WPA3 and Android 11 now starts to enforce section 5.1:
