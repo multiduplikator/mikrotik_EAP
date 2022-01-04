@@ -1,7 +1,7 @@
 # mikrotik EAP-TLS and EAP-PEAP (ROS6 classic or ROS7 with User Manager V5) 
 
 We are going to do this in the following steps
-- Step 1: ROS6 and ROS7
+- Step 1: [ROS6 and ROS7](#step-1-ros6-and-ros7)
   - Enable CRL
 - Step 2a: ROS6
   - Create CA and certificates
