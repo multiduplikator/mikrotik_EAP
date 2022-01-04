@@ -161,7 +161,7 @@ For Windows (WIN), Android (AND) and iOS clients, you simply import the followin
 
 ```
 cert_export_RouterCA.crt
--> WIN: double click to install and specify to go into trusted root certification authorities (local machine!)
+-> WIN: double click to install and specify to go into trusted root certification authorities (current user or local machine)
 -> AND: install network certificate in advanced wireless settings
 -> IOS: https://apple.stackexchange.com/questions/326208/how-do-i-configure-an-ipad-to-use-eap-tls
 
