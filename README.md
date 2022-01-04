@@ -200,7 +200,10 @@ Be aware, that you might struggle to use eapol_test with the ROS7 apporach. At l
 
 Some links that might come in handy:
 
-https://wiki.mikrotik.com/wiki/Manual:Wireless_EAP-TLS_using_RouterOS_with_FreeRADIUS
-https://www.nkent.us/wiki/index.php/Wireless_networking_with_CAPsMAN_and_the_MikroTik_cAP_ac
-https://serverfault.com/questions/986375/mikrotik-eap-tls-wifi-config-using-certificates
-https://help.mikrotik.com/docs/display/ROS/Enterprise+wireless+security+with+User+Manager+v5
+- ROS7
+  - https://help.mikrotik.com/docs/display/ROS/Enterprise+wireless+security+with+User+Manager+v5
+
+- ROS6
+  - https://wiki.mikrotik.com/wiki/Manual:Wireless_EAP-TLS_using_RouterOS_with_FreeRADIUS
+  - https://www.nkent.us/wiki/index.php/Wireless_networking_with_CAPsMAN_and_the_MikroTik_cAP_ac
+  - https://serverfault.com/questions/986375/mikrotik-eap-tls-wifi-config-using-certificates
