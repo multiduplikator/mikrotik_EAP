@@ -1,12 +1,23 @@
-# mikrotik_EAP-TLS
+# mikrotik EAP-TLS and EAP-PEAP (ROS6 classic or ROS7 with User Manager V5) 
 
 We are going to do this in the following steps
-- Enable CRL
-- Create CA and certificates
-- Setup wireless AP
-- Setup wireless client
+- Step 1: ROS6 and ROS7
+  - Enable CRL
+- Step 2a: ROS6
+  - Create CA and certificates
+  - Setup wireless AP
+- Step 2b: ROS7
+  - Create CA and certificates
+  - Setup User Manager
+  - Setup wireless AP
+- Step 3: ROS6 and ROS7
+  - Setup wireless client with EAP-TLS
+  - Setup wireless client with EAP-PEAP
+
 
 We assume RouterOS is on 10.0.0.1 and APs are managed via CAPsMAN. And you are somewhat familiar with Mikrotik stuff.
+
+## Step 1: ROS6 and ROS7
 
 ### Enable CRL
 
@@ -19,7 +30,13 @@ As a side note, in case you want to use freeradius, you have to enable www servi
 set crl-use=yes
 ```
 
-### Create CA and certificates
+Now, continue either with Step 2a or with Step 2b.
+
+## Step 2a: ROS6
+
+This setup gives us EAP-TLS only. EAP-PEAP has to be implemented with a sidecar radius server like freeradius (see Final Remarks). You might want to consider to split the wireless networks into one that does EAP-TLS and another one that does EAP passthrough to e.g. freeradius which does the EAP-PEAP.
+
+### ROS6 - Create CA and certificates
 
 This can also be done outside of RouterOS, but this way it is pretty convenient.
 
@@ -48,25 +65,103 @@ cert_export_RouterCA.crt -> for deploying the client
 cert_export_EAP_Client.p12 -> for deploying the client
 ```
 
-### Setup wireless AP
+### ROS6 - Setup wireless AP
 
 We assume that we already have a working CAPsMAN setup and provisioned the AP with a security profile.
 
 Create a new security profile.
 
 ```
-name="security_eap-tls" authentication-types=wpa2-eap encryption=aes-ccm group-encryption=aes-ccm eap-methods=eap-tls tls-mode=verify-certificate-with-crl tls-certificate=EAP_AP
+/caps-man/security add name="security_eap-tls" authentication-types=wpa2-eap encryption=aes-ccm group-encryption=aes-ccm eap-methods=eap-tls tls-mode=verify-certificate-with-crl tls-certificate=EAP_AP
 ```
 
 Now change the respective configuration for the AP to use the new profile and provision.
 
-### Setup wireless client
+## Step 2b: ROS7
+
+This setup gives us EAP-TLS and EAP-PEAP and it can be done on a give wireless network simultaneously. It is crucial to use secp384r1 and sha384 with the certificates. Otherwise, you will run into trouble with Android devices trying to use the anonymous identity, causing a user not found error in Usermanager (at least on ROS 7.1.1).
+
+### ROS7 - Create CA and certificates
+
+Again, this can also be done outside of RouterOS, but this way it is pretty convenient. For the client certificates, it seems that the validity period should not be more than 825 days.
+
+```
+# Generating a Certificate Authority
+/certificate
+add name=RouterCA common-name=Router subject-alt-name=IP:10.0.0.1 key-size=secp384r1 digest-algorithm=sha384 days-valid=1825 key-usage=key-cert-sign,crl-sign
+sign RouterCA ca-crl-host=10.0.0.1 name=RouterCA
+
+# Generating a server certificate for User Manager
+add name=EAP_AP common-name=EAP_AP subject-alt-name=IP:10.0.0.1 key-size=secp384r1 digest-algorithm=sha384 days-valid=730 key-usage=tls-server
+sign EAP_AP ca=RouterCA name=EAP_AP
+set EAP_AP trusted=yes
+
+# Generating a client certificate
+add name=EAP_Client common-name=EAP_Client days-valid=730 key-size=secp384r1 digest-algorithm=sha384 key-usage=tls-client 
+sign EAP_Client ca=RouterCA name=EAP_Client
+set EAP_Client trusted=yes
+
+# Exporting the public key of the CA as well as the generated client private key and certificate for distribution to client device
+export-certificate RouterCA
+export-certificate EAP_Client type=pkcs12 export-passphrase=<your_long_passphrase_goes_here>
+```
+
+The exported files should be:
+
+```
+cert_export_RouterCA.crt -> for deploying the client
+cert_export_EAP_Client.p12 -> for deploying the client
+```
+
+### ROS7 - Setup Usermanager
+
+The User Manger serves as the radius server that does the EAP stuff, using the EAP-AP certificate. We enable the router to do radius auth, adjust the user groups to provide one for EAP-TLS and another one for EAP-PEAP. Users with certificate go into the first group, having the same name as the common name of their certificate. Users that do EAP-PEAP go into the second group. Also, we allow for more than one device/connection to share a given user.
+
+```
+# Enabling User Manager and specifying, which certificate to use
+/user-manager
+set enabled=yes certificate=EAP_AP
+
+# Adding access points
+/user-manager router
+add name=Router address=10.0.0.1 shared-secret=<your_long_shared_secret_goes_here>
+# Limiting allowed authentication methods
+/user-manager user group
+set [find where name=default] outer-auths=eap-peap inner-auths=peap-mschap2
+add name=certificate-authenticated outer-auths=eap-tls
+# Adding users
+/user-manager user
+add name=EAP_Client group=certificate-authenticated shared-users=3
+add name=SomeUser group=default password=<users_password_goes_here> shared-users=2
+```
+
+### ROS7 - Setup wireless AP
+
+We assume that we already have a working CAPsMAN setup and provisioned the AP with a security profile. In ROS6 we did EAP direct against the certificate store. Now, in ROS7, we do it as passthrough to the User Manager. 
+
+To make the passthrough work, we have to create an entry in the RADIUS configuration, that links to the User Manager
+
+```
+/radius add address=10.0.0.1 secret=<your_long_shared_secret_goes_here> service=wireless timeout=1s
+```
+
+Now, create a new security profile that does the actual passthrough.
+
+```
+/caps-man/security add name="security_eap-tls" authentication-types=wpa2-eap encryption=aes-ccm group-encryption=aes-ccm eap-methods=passthrough
+```
+
+Now change the respective configuration for the AP to use the new profile and provision.
+
+## Step 3: ROS6 and ROS7
+
+### Setup wireless client with EAP-TLS
 
 For Windows (WIN), Android (AND) and iOS clients, you simply import the following two files
 
 ```
 cert_export_RouterCA.crt
--> WIN: double click to install and specify to go into trusted root certification authorities (local machine or current user)
+-> WIN: double click to install and specify to go into trusted root certification authorities (local machine!)
 -> AND: install network certificate in advanced wireless settings
 -> IOS: https://apple.stackexchange.com/questions/326208/how-do-i-configure-an-ipad-to-use-eap-tls
 
@@ -78,7 +173,13 @@ cert_export_EAP_Client.p12
 
 From here, you can configure the respective device to use your imported CA and certificate. WIN and IOS usually autoselect when trying to connect. AND needs manual configuration.
 
-#### Sidenote on WPA3 and Android 11
+### Setup wireless client with EAP-PEAP
+
+In case you have ROS6, you have to implement EAP-PEAP via passthrough to a sidecar radius server, e.g. freeradius. This works with a dedicated wireless network that does the passthrough.
+
+In case you have ROS7 and User Manager, you can do EAP-PEAP on the same wireless network, using the user/password combination as created in the default group above, i.e. username as "SomeUser" and password as "<users_password_goes_here>" - leaving the anonymous_identity blank.
+
+### Sidenote on WPA3 and Android 11
 We are on the advent of WPA3 and Android 11 now starts to enforce section 5.1:
 "The STA is configured with EAP credentials that explicitly specify a CA root certificate that matches the root certificate in the received Server Certificate message and, if the EAP credentials also include a domain name (FQDN or suffix-only), it matches the domain name (SubjectAltName DNSName if present, otherwise SubjectName CN) of the certificate [2] in the received Server Certificate message."
 
@@ -87,12 +188,17 @@ In somewhat simpler terms, this reads:
 
 Hence (esp. when setting up Androind 11 wireless clients), make sure that you use the CN of the EAP_AP certificate as Domain field entry - in our scenario that would be "EAP_AP" - when setting up the client. Alternatively, you can add an additional "subject-alt-name=DNS:eap.ap.local" when creating the EAP_AP certificate and respectively use "eap.ap.local" as Domain field entry.
 
-### Final remarks
+## Final remarks
 
 Before deploying for real, make sure you check revokation works as expected, since you cannot delete certificates anymore (unless you remove all of them together with the CA).
+
+It is relatively simple to exted the above to also provide EAP-TTLs support. ROS6 again via sidecar radius server, ROS7 via the Usermanager and its groups settings inner-auth/outer-auth.
+
+Be aware, that you might struggle to use eapol_test with the ROS7 apporach. At least I did not spent enough time to get it to work with the secp384r1 being a 384-bit prime field Weierstrass curve. 
 
 Some links that might come in handy:
 
 https://wiki.mikrotik.com/wiki/Manual:Wireless_EAP-TLS_using_RouterOS_with_FreeRADIUS
 https://www.nkent.us/wiki/index.php/Wireless_networking_with_CAPsMAN_and_the_MikroTik_cAP_ac
 https://serverfault.com/questions/986375/mikrotik-eap-tls-wifi-config-using-certificates
+https://help.mikrotik.com/docs/display/ROS/Enterprise+wireless+security+with+User+Manager+v5
