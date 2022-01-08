@@ -115,7 +115,7 @@ cert_export_EAP_Client.p12 -> for deploying the client
 
 ### ROS7 - Setup Usermanager
 
-The User Manger serves as the radius server that does the EAP stuff, using the EAP-AP certificate. We enable the router to do radius auth, adjust the user groups to provide one for EAP-TLS and another one for EAP-PEAP. Users with certificate go into the first group, having the same name as the common name of their certificate. Users that do EAP-PEAP go into the second group. Also, we allow for more than one device/connection to share a given user.
+The User Manger serves as the radius server that does the EAP stuff, using the EAP_AP certificate. We enable the router to do radius auth, adjust the user groups to provide one for EAP-TLS and another one for EAP-PEAP. Users with certificate go into the first group, having the same name as the common name of their certificate. Users that do EAP-PEAP go into the second group. Also, we allow for more than one device/connection to share a given user.
 
 ```
 # Enabling User Manager and specifying, which certificate to use
