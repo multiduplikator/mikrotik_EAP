@@ -79,7 +79,7 @@ Now change the respective configuration for the AP to use the new profile and pr
 
 ## Step 2b: ROS7
 
-This setup gives us EAP-TLS and EAP-PEAP and it can be done on a give wireless network simultaneously. It is crucial to use secp384r1 and sha384 with the certificates. Otherwise, you will run into trouble with Android devices trying to use the anonymous identity, causing a user not found error in Usermanager (at least on ROS 7.1.1).
+This setup gives us EAP-TLS and EAP-PEAP and it can be done on a given wireless network simultaneously. It is crucial to use secp384r1 and sha384 with the certificates. Otherwise, you will run into trouble with Android devices trying to use the anonymous identity, causing a user not found error in Usermanager (at least on ROS 7.1.1).
 
 ### ROS7 - Create CA and certificates
 
