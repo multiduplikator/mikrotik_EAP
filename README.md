@@ -181,14 +181,14 @@ In case you have ROS7 and User Manager, you can do EAP-PEAP on the same wireless
 
 This mode is particularly usefull for Chromebooks that are remote administered, and where you cannot install certificates permanently.
 
-### Sidenote on WPA3 and Android 11
+### Sidenote on WPA3 and Android 11+
 We are on the advent of WPA3 and Android 11 now starts to enforce section 5.1:
 "The STA is configured with EAP credentials that explicitly specify a CA root certificate that matches the root certificate in the received Server Certificate message and, if the EAP credentials also include a domain name (FQDN or suffix-only), it matches the domain name (SubjectAltName DNSName if present, otherwise SubjectName CN) of the certificate [2] in the received Server Certificate message."
 
 In somewhat simpler terms, this reads:
 "The new Domain field in the wifi config dialog must be the CN or subjectAlternateName of the server certificate." 
 
-Hence (esp. when setting up Androind 11 wireless clients), make sure that you use the CN of the EAP_AP certificate as Domain field entry - in our scenario that would be "EAP_AP" - when setting up the client. Alternatively, you can add an additional "subject-alt-name=DNS:eap.ap.local" when creating the EAP_AP certificate and respectively use "eap.ap.local" as Domain field entry.
+Hence (esp. when setting up Androind 11+ wireless clients), make sure that you use the CN of the EAP_AP certificate as Domain field entry - in our scenario that would be "EAP_AP" - when setting up the client. Alternatively, you can add an additional "subject-alt-name=DNS:eap.ap.local" when creating the EAP_AP certificate and respectively use "eap.ap.local" as Domain field entry.
 
 ## Final remarks
 
