@@ -196,7 +196,7 @@ Before deploying for real, make sure you check revokation works as expected, sin
 
 It is relatively simple to exted the above to also provide EAP-TTLs support. ROS6 again via sidecar radius server, ROS7 via the Usermanager and its groups settings inner-auth/outer-auth.
 
-Be aware, that you might struggle to use eapol_test with the ROS7 apporach. At least I did not spent enough time to get it to work with the secp384r1 being a 384-bit prime field Weierstrass curve. 
+Be aware, that you might struggle to use eapol_test with the ROS7 appraach. At least I did not spent enough time to get it to work with the secp384r1 being a 384-bit prime field Weierstrass curve. 
 
 Some links that might come in handy:
 
