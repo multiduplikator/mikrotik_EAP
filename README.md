@@ -194,7 +194,7 @@ Hence (esp. when setting up Androind 11+ wireless clients), make sure that you u
 
 Before deploying for real, make sure you check revokation works as expected, since you cannot delete certificates anymore (unless you remove all of them together with the CA).
 
-It is relatively simple to exted the above to also provide EAP-TTLs support. ROS6 again via sidecar radius server, ROS7 via the Usermanager and its groups settings inner-auth/outer-auth.
+It is relatively simple to exted the above to also provide EAP-TTLS support. ROS6 again via sidecar radius server, ROS7 via the Usermanager and its groups settings inner-auth/outer-auth.
 
 Be aware, that you might struggle to use eapol_test with the ROS7 appraach. At least I did not spent enough time to get it to work with the secp384r1 being a 384-bit prime field Weierstrass curve. 
 
